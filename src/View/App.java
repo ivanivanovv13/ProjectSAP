@@ -12,6 +12,8 @@ public class App {
 
 	public static void main(String[] args) throws NotEmailAddressException {
 
+		AccountController accounts= new AccountController();
+		ItemsController items= new ItemsController();
 		String userId, email ;
 		String firstName ; 
 		String	lastName ;
@@ -41,7 +43,7 @@ public class App {
 				System.out.println("Insert Phone Number:");
 				phoneNum = in.next();
 				User obj = new User(firstName, lastName, email, phoneNum, password);
-				AccountController.addAccount(obj);
+				accounts.addAccount(obj);
 				break;
 			}
 			case 2: {
@@ -49,7 +51,7 @@ public class App {
 				email = in.next();
 				System.out.println("Insert Password:");
 				password = in.next();
-				userId = AccountController.logIn(email, password);
+				userId = accounts.logIn(email, password);
 				if (userId != "false") {
 					System.out.println("Logged in successfully");
 					while (true) {
@@ -59,11 +61,11 @@ public class App {
 						System.out.println("Press 0 for Stopping the program.");
 						switch (in.nextInt()) {
 						case 1: {
-							ItemsController.getItems();
+							items.getItems();
 							break;
 						}
 						case 2: {
-							ItemsController.getUsersItems(userId);
+							items.getUsersItems(userId);
 							System.out.println("Press 1 for update item.");
 							System.out.println("Press 2 for deleting item.");
 							System.out.println("Press 0 for going back.");
@@ -77,12 +79,12 @@ public class App {
 								price = in.nextDouble();
 								System.out.println("Insert descrption:");
 								description = in.next();
-								ItemsController.updateItem(userId, itemId, name, price, description);
+								items.updateItem(userId, itemId, name, price, description);
 
 								break;
 							case 2:
 								System.out.println("Insert id of the item you want to delete :");
-								ItemsController.deleteItem(userId, in.next());
+								items.deleteItem(userId, in.next());
 								break;
 							case 0: {
 								break;
@@ -99,7 +101,7 @@ public class App {
 							System.out.println("Insert descption:");
 							description = in.next();
 							Item item = new Item(userId, name, price, description);
-							ItemsController.addItem(item);
+							items.addItem(item);
 							break;
 						}
 						case 0: {

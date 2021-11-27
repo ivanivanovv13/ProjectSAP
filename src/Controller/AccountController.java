@@ -10,16 +10,16 @@ import Model.User;
 
 public class AccountController {
 
-	private static List<User> accounts = new ArrayList<User>();
+	private  List<User> accounts = new ArrayList<User>();
 
-	public static void addAccount(User obj)  {
+	public  void addAccount(User obj)  {
 		if(obj!=null) {
 			accounts.add(obj);
 			System.out.println("You register successfuly!For log in press 2.");
 		}
 	}
 
-	public static String logIn(String email, String password) {
+	public  String logIn(String email, String password) {
 		for (User temp : accounts) {
 			if (temp.getEmail().equals(email)) {
 				if (temp.getPassword().equals(password)) {
