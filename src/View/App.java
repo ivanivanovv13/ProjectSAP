@@ -1,5 +1,6 @@
 package View;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import Controller.AccountController;
@@ -10,7 +11,7 @@ import Model.User;
 
 public class App {
 
-	public static void main(String[] args) throws NotEmailAddressException {
+	public static void main(String[] args) throws NotEmailAddressException, SQLException {
 
 		AccountController accounts= new AccountController();
 		ItemsController items= new ItemsController();
@@ -85,15 +86,16 @@ public class App {
 							case 2:
 								System.out.println("Insert id of the item you want to delete :");
 								items.deleteItem(userId, in.next());
+								System.out.println("Item deleted!");
 								break;
-							case 0: {
+							case 0: 
 								break;
-							}
+							
 							}
 							break;
 
 						}
-						case 3: {
+						case 3: 
 							System.out.println("Insert name:");
 							name = in.next();
 							System.out.println("Insert price:");
@@ -103,11 +105,10 @@ public class App {
 							Item item = new Item(userId, name, price, description);
 							items.addItem(item);
 							break;
-						}
-						case 0: {
+						
+						case 0: 
 							System.exit(0);
 							break;
-						}
 
 						}
 					}

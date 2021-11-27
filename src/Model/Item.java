@@ -17,6 +17,13 @@ public class Item {
 		this.price = price;
 		this.description = description;
 	}
+	public Item(String id, String name,String description, double price,String userId) {
+		this.id = id;
+		this.userId = userId;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+	}
 
 	public void setUserId(String userId) {
 		this.userId = userId;

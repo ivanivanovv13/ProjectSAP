@@ -26,6 +26,21 @@ public class User implements MailValidator {
 		this.password = password;
 
 	}
+	
+	public User(String id,String email,String password,String firstName, String lastName,  String phoneNum)
+			throws NotEmailAddressException {
+		if (checkEmail(email)) {
+			this.email = email;
+		} else {
+			throw new NotEmailAddressException();
+		}
+		this.id =id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.phoneNum = phoneNum;
+		this.password = password;
+
+	}
 
 	public User() {
 		firstName = "";
