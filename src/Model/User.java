@@ -5,12 +5,12 @@ import java.util.regex.Matcher;
 
 public class User implements MailValidator {
 
-	private String id ;
-	private String firstName = "";
-	private String lastName = "";
-	private String email = "";
-	private String phoneNum = "";
-	private String password = "";
+	private String id;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String phoneNum;
+	private String password;
 
 	public User(String firstName, String lastName, String email, String phoneNum, String password)
 			throws NotEmailAddressException {
@@ -19,7 +19,7 @@ public class User implements MailValidator {
 		} else {
 			throw new NotEmailAddressException();
 		}
-		this.id =UUID.randomUUID().toString();
+		this.id = UUID.randomUUID().toString();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNum = phoneNum;
@@ -28,17 +28,16 @@ public class User implements MailValidator {
 	}
 
 	public User() {
-		 firstName = "";
-		 lastName = "";
-		 email = "";
-		 phoneNum = "";
-		 password = "";
+		firstName = "";
+		lastName = "";
+		email = "";
+		phoneNum = "";
+		password = "";
 	}
 
 	public String getPassword() {
 		return password;
 	}
-
 
 	public String getId() {
 		return id;
@@ -63,8 +62,6 @@ public class User implements MailValidator {
 	public String getEmail() {
 		return email;
 	}
-
-	
 
 	public String getPhoneNum() {
 		return phoneNum;

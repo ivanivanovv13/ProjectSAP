@@ -4,15 +4,15 @@ import java.util.UUID;
 
 public class Item {
 
-	private String id ;
+	private String id;
 	private String userId;
-	private String name = "";
-	private double price = 0.0;
-	private String description = "";
+	private String name;
+	private double price;
+	private String description;
 
 	public Item(String userId, String name, double price, String description) {
-		this.id =UUID.randomUUID().toString();
-		this.userId=userId;
+		this.id = UUID.randomUUID().toString();
+		this.userId = userId;
 		this.name = name;
 		this.price = price;
 		this.description = description;
