@@ -9,6 +9,7 @@ public class Item {
 	private String name;
 	private double price;
 	private String description;
+	private boolean status;
 
 	public Item(String userId, String name, double price, String description) {
 		this.id = UUID.randomUUID().toString();
@@ -16,13 +17,21 @@ public class Item {
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		this.status=true;
 	}
-	public Item(String id, String name,String description, double price,String userId) {
+	public boolean isActive() {
+		return status;
+	}
+	public void setActive(boolean status) {
+		this.status = status;
+	}
+	public Item(String id, String name,String description, double price,boolean status,String userId) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		this.status=status;
 	}
 
 	public void setUserId(String userId) {
@@ -31,9 +40,9 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", price=" + price + "lv, description=" + description + "]";
+		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", active="
+				+ status + "]";
 	}
-
 	public String getId() {
 		return id;
 	}

@@ -49,5 +49,13 @@ public class AccountController {
 		}
 		return "false";
 	}
+	
+	public String getUserPhoneNumber(String userId) {
+		for(User temp:accounts) {
+			if(temp.getId().equals(userId))
+				return temp.getFirstName()+" "+temp.getLastName()+" "+temp.getPhoneNum();
+		}
+		return null;
+	}
 
 }

@@ -22,6 +22,7 @@ public class App {
 		String	phoneNum;
         String	name ;
 	    String description ;
+	    boolean status;
 		double price = 0.0;
 		String itemId;
 		Scanner in = new Scanner(System.in);
@@ -63,6 +64,18 @@ public class App {
 						switch (in.nextInt()) {
 						case 1: {
 							items.getItems();
+							System.out.println("Press 1 buying item.");
+							System.out.println("Press 0 for going back.");
+							switch(in.nextInt()) {
+							case 1:
+								System.out.println("Insert item's id:");
+								String data=accounts.getUserPhoneNumber(items.getUser(in.next()));
+								if(data!=null) {
+									System.out.println("Call seller :"+ data);
+								}
+								
+								break;
+							}
 							break;
 						}
 						case 2: {
@@ -80,7 +93,9 @@ public class App {
 								price = in.nextDouble();
 								System.out.println("Insert descrption:");
 								description = in.next();
-								items.updateItem(userId, itemId, name, price, description);
+								System.out.println("Insert status:");
+								status = in.nextBoolean();
+								items.updateItem(userId, itemId, name, price, description,status);
 
 								break;
 							case 2:
