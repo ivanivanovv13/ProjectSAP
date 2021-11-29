@@ -17,21 +17,24 @@ public class Item {
 		this.name = name;
 		this.price = price;
 		this.description = description;
-		this.status=true;
+		this.status = true;
 	}
+
 	public boolean isActive() {
 		return status;
 	}
+
 	public void setActive(boolean status) {
 		this.status = status;
 	}
-	public Item(String id, String name,String description, double price,boolean status,String userId) {
+
+	public Item(String id, String name, String description, double price, boolean status, String userId) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
 		this.price = price;
 		this.description = description;
-		this.status=status;
+		this.status = status;
 	}
 
 	public void setUserId(String userId) {
@@ -43,6 +46,7 @@ public class Item {
 		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", active="
 				+ status + "]";
 	}
+
 	public String getId() {
 		return id;
 	}

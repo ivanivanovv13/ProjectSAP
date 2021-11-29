@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 public class User {
 
 	private String id;
@@ -13,7 +12,7 @@ public class User {
 	private String email;
 	private String phoneNum;
 	private String password;
-	public List<Item> favouriteItems= new ArrayList<Item>();
+	public List<Item> favouriteItems = new ArrayList<Item>();
 
 	public User(String firstName, String lastName, String email, String phoneNum, String password)
 			throws NotEmailAddressException {
@@ -29,15 +28,15 @@ public class User {
 		this.password = password;
 
 	}
-	
-	public User(String id,String email,String password,String firstName, String lastName,  String phoneNum)
+
+	public User(String id, String email, String password, String firstName, String lastName, String phoneNum)
 			throws NotEmailAddressException {
 		if (MailValidator.checkEmail(email)) {
 			this.email = email;
 		} else {
 			throw new NotEmailAddressException(email);
 		}
-		this.id =id;
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNum = phoneNum;
@@ -88,7 +87,5 @@ public class User {
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
-
-	
 
 }
