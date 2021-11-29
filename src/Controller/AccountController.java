@@ -2,16 +2,18 @@ package Controller;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+import Model.Item;
 import Model.NotEmailAddressException;
 import Model.User;
 
 public class AccountController {
 
-	private List<User> accounts = new ArrayList<User>();
+	public List<User> accounts = new ArrayList<User>();
 
 	public AccountController() throws SQLException, NotEmailAddressException {
 		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
@@ -26,14 +28,15 @@ public class AccountController {
 
 	public void addAccount(User obj) throws SQLException {
 		if (obj != null) {
-			
+
 			Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
 			Statement myStmt = myCon.createStatement();
-			String sql="INSERT INTO users(id,email,password,first_name,last_name,phone_number) "+
-			"VALUES (\""+obj.getId()+"\",\""+obj.getEmail()+"\",\""+obj.getPassword()+"\",\""+obj.getFirstName()+"\",\""+obj.getLastName()+"\",\""+obj.getPhoneNum() +"\");";
-			
+			String sql = "INSERT INTO users(id,email,password,first_name,last_name,phone_number) " + "VALUES (\""
+					+ obj.getId() + "\",\"" + obj.getEmail() + "\",\"" + obj.getPassword() + "\",\""
+					+ obj.getFirstName() + "\",\"" + obj.getLastName() + "\",\"" + obj.getPhoneNum() + "\");";
+
 			myStmt.executeUpdate(sql);
-			
+
 			accounts.add(obj);
 			System.out.println("You register successfuly!For log in press 2.");
 		}
@@ -47,13 +50,13 @@ public class AccountController {
 				}
 			}
 		}
-		return "false";
+		return null;
 	}
-	
+
 	public String getUserPhoneNumber(String userId) {
-		for(User temp:accounts) {
-			if(temp.getId().equals(userId))
-				return temp.getFirstName()+" "+temp.getLastName()+" "+temp.getPhoneNum();
+		for (User temp : accounts) {
+			if (temp.getId().equals(userId))
+				return temp.getFirstName() + " " + temp.getLastName() + " " + temp.getPhoneNum();
 		}
 		return null;
 	}

@@ -11,7 +11,7 @@ import Model.Item;
 
 
 public class ItemsController {
-	private  List<Item> items = new ArrayList<Item>();
+	public  List<Item> items = new ArrayList<Item>();
 	
 	public ItemsController() throws SQLException {
 		Connection myCon= DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce","root","ivan1313");
@@ -95,4 +95,7 @@ public class ItemsController {
 		}
 		return null;
 	}
+	
+	
+
 }

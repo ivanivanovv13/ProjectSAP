@@ -1,9 +1,11 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
-public class User implements MailValidator {
+
+public class User {
 
 	private String id;
 	private String firstName;
@@ -11,13 +13,14 @@ public class User implements MailValidator {
 	private String email;
 	private String phoneNum;
 	private String password;
+	public List<Item> favouriteItems= new ArrayList<Item>();
 
 	public User(String firstName, String lastName, String email, String phoneNum, String password)
 			throws NotEmailAddressException {
-		if (checkEmail(email)) {
+		if (MailValidator.checkEmail(email)) {
 			this.email = email;
 		} else {
-			throw new NotEmailAddressException();
+			throw new NotEmailAddressException(email);
 		}
 		this.id = UUID.randomUUID().toString();
 		this.firstName = firstName;
@@ -29,10 +32,10 @@ public class User implements MailValidator {
 	
 	public User(String id,String email,String password,String firstName, String lastName,  String phoneNum)
 			throws NotEmailAddressException {
-		if (checkEmail(email)) {
+		if (MailValidator.checkEmail(email)) {
 			this.email = email;
 		} else {
-			throw new NotEmailAddressException();
+			throw new NotEmailAddressException(email);
 		}
 		this.id =id;
 		this.firstName = firstName;
@@ -86,13 +89,6 @@ public class User implements MailValidator {
 		this.phoneNum = phoneNum;
 	}
 
-	@Override
-	public boolean checkEmail(String email) {
-		Matcher matcher = VALID_MAIL.matcher(email);
-		if (matcher.matches()) {
-			return true;
-		}
-		return false;
-	}
+	
 
 }

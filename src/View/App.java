@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import Controller.AccountController;
+import Controller.FavouriteItems;
 import Controller.ItemsController;
 import Model.Item;
 import Model.NotEmailAddressException;
@@ -13,16 +14,18 @@ public class App {
 
 	public static void main(String[] args) throws NotEmailAddressException, SQLException {
 
-		AccountController accounts= new AccountController();
-		ItemsController items= new ItemsController();
-		String userId, email ;
-		String firstName ; 
-		String	lastName ;
-		String	password ;
-		String	phoneNum;
-        String	name ;
-	    String description ;
-	    boolean status;
+		AccountController accounts = new AccountController();
+		ItemsController items = new ItemsController();
+		FavouriteItems faveItems = new FavouriteItems(accounts.accounts, items.items);
+
+		String userId, email;
+		String firstName;
+		String lastName;
+		String password;
+		String phoneNum;
+		String name;
+		String description;
+		boolean status;
 		double price = 0.0;
 		String itemId;
 		Scanner in = new Scanner(System.in);
@@ -54,27 +57,32 @@ public class App {
 				System.out.println("Insert Password:");
 				password = in.next();
 				userId = accounts.logIn(email, password);
-				if (userId != "false") {
+				if (userId != null) {
 					System.out.println("Logged in successfully");
 					while (true) {
 						System.out.println("Press 1 for all items.");
 						System.out.println("Press 2 for your items.");
 						System.out.println("Press 3 for add a item.");
+						System.out.println("Press 4 for favourite items.");
 						System.out.println("Press 0 for Stopping the program.");
 						switch (in.nextInt()) {
 						case 1: {
 							items.getItems();
 							System.out.println("Press 1 buying item.");
+							System.out.println("Press 2 to add item as favourite.");
 							System.out.println("Press 0 for going back.");
-							switch(in.nextInt()) {
+							switch (in.nextInt()) {
 							case 1:
 								System.out.println("Insert item's id:");
-								String data=accounts.getUserPhoneNumber(items.getUser(in.next()));
-								if(data!=null) {
-									System.out.println("Call seller :"+ data);
+								String data = accounts.getUserPhoneNumber(items.getUser(in.next()));
+								if (data != null) {
+									System.out.println("Call seller :" + data);
 								}
-								
 								break;
+							case 2:
+								System.out.println("Insert item's id:");
+								faveItems.addFavouriteItems(userId, in.next());
+								System.out.println("Item added to favourites.");
 							}
 							break;
 						}
@@ -95,7 +103,7 @@ public class App {
 								description = in.next();
 								System.out.println("Insert status:");
 								status = in.nextBoolean();
-								items.updateItem(userId, itemId, name, price, description,status);
+								items.updateItem(userId, itemId, name, price, description, status);
 
 								break;
 							case 2:
@@ -103,14 +111,14 @@ public class App {
 								items.deleteItem(userId, in.next());
 								System.out.println("Item deleted!");
 								break;
-							case 0: 
+							case 0:
 								break;
-							
+
 							}
 							break;
 
 						}
-						case 3: 
+						case 3:
 							System.out.println("Insert name:");
 							name = in.next();
 							System.out.println("Insert price:");
@@ -120,8 +128,19 @@ public class App {
 							Item item = new Item(userId, name, price, description);
 							items.addItem(item);
 							break;
-						
-						case 0: 
+
+						case 4:
+							faveItems.getFavouriteItems(userId);
+							System.out.println("Press 1 to remove item from favourites.");
+							System.out.println("Press 0 to go back.");
+							switch (in.nextInt()) {
+							case 1:
+								System.out.println("Insert items id:");
+								faveItems.removeFavouriteItems(userId, in.next());
+								break;
+							}
+							break;
+						case 0:
 							System.exit(0);
 							break;
 
