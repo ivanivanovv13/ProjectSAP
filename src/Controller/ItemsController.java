@@ -13,13 +13,7 @@ public class ItemsController {
 	public List<Item> items = new ArrayList<Item>();
 
 	public ItemsController() throws SQLException {
-		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
-		Statement myStmt = myCon.createStatement();
-		ResultSet myRs = myStmt.executeQuery("select * from items");
-		while (myRs.next()) {
-			items.add(new Item(myRs.getString("id"), myRs.getString("name"), myRs.getString("description"),
-					myRs.getDouble("price"), myRs.getBoolean("status"), myRs.getString("user_id")));
-		}
+		fetchAllItems();
 	}
 
 	public void getItems() {
@@ -99,6 +93,16 @@ public class ItemsController {
 			}
 		}
 		return null;
+	}
+
+	public void fetchAllItems() throws SQLException {
+		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
+		Statement myStmt = myCon.createStatement();
+		ResultSet myRs = myStmt.executeQuery("select * from items");
+		while (myRs.next()) {
+			items.add(new Item(myRs.getString("id"), myRs.getString("name"), myRs.getString("description"),
+					myRs.getDouble("price"), myRs.getBoolean("status"), myRs.getString("user_id")));
+		}
 	}
 
 }

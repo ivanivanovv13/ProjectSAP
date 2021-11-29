@@ -15,15 +15,8 @@ public class AccountController {
 
 	public List<User> accounts = new ArrayList<User>();
 
-	public AccountController() throws SQLException, NotEmailAddressException {
-		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
-		Statement myStmt = myCon.createStatement();
-		ResultSet myRs = myStmt.executeQuery("select * from users");
-
-		while (myRs.next()) {
-			accounts.add(new User(myRs.getString("id"), myRs.getString("email"), myRs.getString("password"),
-					myRs.getString("first_name"), myRs.getString("last_name"), myRs.getString("phone_number")));
-		}
+	public AccountController() throws SQLException, NotEmailAddressException{
+		fetchAllUsers();
 	}
 
 	public void addAccount(User obj) throws SQLException {
@@ -59,6 +52,17 @@ public class AccountController {
 				return temp.getFirstName() + " " + temp.getLastName() + " " + temp.getPhoneNum();
 		}
 		return null;
+	}
+	
+	public void fetchAllUsers() throws SQLException, NotEmailAddressException {
+		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
+		Statement myStmt = myCon.createStatement();
+		ResultSet myRs = myStmt.executeQuery("select * from users");
+
+		while (myRs.next()) {
+			accounts.add(new User(myRs.getString("id"), myRs.getString("email"), myRs.getString("password"),
+					myRs.getString("first_name"), myRs.getString("last_name"), myRs.getString("phone_number")));
+		}
 	}
 
 }

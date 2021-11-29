@@ -12,21 +12,13 @@ import Model.Item;
 import Model.User;
 
 public class FavouriteItems {
-	List<User> accounts;
-	List<Item> items;
+	private List<User> accounts;
+	private List<Item> items;
 
 	public FavouriteItems(List<User> accounts, List<Item> items) throws SQLException {
-		super();
 		this.accounts = accounts;
 		this.items = items;
-
-		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
-		Statement myStmt = myCon.createStatement();
-		ResultSet myRs = myStmt.executeQuery("select * from favourite_items");
-
-		while (myRs.next()) {
-			addFavouriteItems(myRs.getString("user_id"), myRs.getString("item_id"));
-		}
+		fetchAllFavouriteItems();
 	}
 
 	public void addFavouriteItems(String userId, String itemId) throws SQLException {
@@ -83,6 +75,28 @@ public class FavouriteItems {
 			}
 		}
 		return null;
+	}
+
+	private void fetchAllFavouriteItems() throws SQLException {
+		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
+		Statement myStmt = myCon.createStatement();
+		ResultSet myRs = myStmt.executeQuery("select * from favourite_items");
+
+		Item item;
+		String itemId;
+		String userId;
+		while (myRs.next()) {
+			itemId = myRs.getString("item_id");
+			userId = myRs.getString("user_id");
+			item = getItem(itemId);
+
+			for (User temp : accounts) {
+				if (temp.getId().equals(userId)) {
+					temp.favouriteItems.add(item);
+				}
+			}
+
+		}
 	}
 
 }
