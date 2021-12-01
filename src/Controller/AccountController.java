@@ -14,24 +14,37 @@ import Model.User;
 public class AccountController {
 
 	public List<User> accounts = new ArrayList<User>();
-
-	public AccountController() throws SQLException, NotEmailAddressException{
+	final String allUsers="select * from users";
+	final String insertUsers="INSERT INTO users(id,email,password,first_name,last_name,phone_number) VALUES (?,?,?,?,?,?); ";
+	String databaseUrl ;
+	String databaseUser ;
+	String databasePassword;
+	
+	public AccountController(String databaseUrl,String databaseUser,String databasePassword) throws SQLException, NotEmailAddressException{
+		this.databaseUrl=databaseUrl;
+		this.databaseUser=databaseUser;
+		this.databasePassword=databasePassword;
 		fetchAllUsers();
 	}
 
-	public void addAccount(User obj) throws SQLException {
+	public void addAccount(User obj) throws SQLException,NullPointerException {
 		if (obj != null) {
 
-			Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
-			Statement myStmt = myCon.createStatement();
-			String sql = "INSERT INTO users(id,email,password,first_name,last_name,phone_number) " + "VALUES (\""
-					+ obj.getId() + "\",\"" + obj.getEmail() + "\",\"" + obj.getPassword() + "\",\""
-					+ obj.getFirstName() + "\",\"" + obj.getLastName() + "\",\"" + obj.getPhoneNum() + "\");";
-
-			myStmt.executeUpdate(sql);
+			Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser,databasePassword);
+			PreparedStatement preparedStatement = myCon.prepareStatement(insertUsers);
+			preparedStatement.setString(1,obj.getId());
+			preparedStatement.setString(2,obj.getEmail());
+			preparedStatement.setString(3,obj.getPassword());
+			preparedStatement.setString(4,obj.getFirstName());
+			preparedStatement.setString(5,obj.getLastName());
+			preparedStatement.setString(6,obj.getPhoneNum());
+			preparedStatement.executeUpdate();
 
 			accounts.add(obj);
 			System.out.println("You register successfuly!For log in press 2.");
+		}
+		else {
+			throw new NullPointerException();
 		}
 	}
 
@@ -55,9 +68,9 @@ public class AccountController {
 	}
 	
 	public void fetchAllUsers() throws SQLException, NotEmailAddressException {
-		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
+		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser,databasePassword);
 		Statement myStmt = myCon.createStatement();
-		ResultSet myRs = myStmt.executeQuery("select * from users");
+		ResultSet myRs = myStmt.executeQuery(allUsers);
 
 		while (myRs.next()) {
 			accounts.add(new User(myRs.getString("id"), myRs.getString("email"), myRs.getString("password"),

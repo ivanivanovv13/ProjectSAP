@@ -13,10 +13,10 @@ import Model.User;
 public class App {
 
 	public static void main(String[] args) throws NotEmailAddressException, SQLException {
-
-		AccountController accounts = new AccountController();
-		ItemsController items = new ItemsController();
-		FavouriteItems faveItems = new FavouriteItems(accounts.accounts, items.items);
+		
+		AccountController accounts = new AccountController(args[0],args[1],args[2]);
+		ItemsController items = new ItemsController(args[0],args[1],args[2]);
+		FavouriteItems faveItems = new FavouriteItems(accounts.accounts, items.items,args[0],args[1],args[2]);
 
 		String userId, email;
 		String firstName;

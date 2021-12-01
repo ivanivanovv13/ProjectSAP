@@ -1,7 +1,10 @@
 package Controller;
 
 import java.sql.Connection;
+
+
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,10 +17,19 @@ import Model.User;
 public class FavouriteItems {
 	private List<User> accounts;
 	private List<Item> items;
+	final String allFavouriteItems = "select * from favourite_items";
+	final String insertFavouriteItems= "INSERT INTO favourite_items(user_id,item_id) VALUES (?,?); ";
+	final String deleteFavouriteItems = "DELETE FROM favourite_items WHERE user_id =? AND item_id=?";
+	String databaseUrl ;
+	String databaseUser ;
+	String databasePassword;
 
-	public FavouriteItems(List<User> accounts, List<Item> items) throws SQLException {
+	public FavouriteItems(List<User> accounts, List<Item> items,String databaseUrl,String databaseUser,String databasePassword) throws SQLException {
 		this.accounts = accounts;
 		this.items = items;
+		this.databaseUrl=databaseUrl;
+		this.databaseUser=databaseUser;
+		this.databasePassword=databasePassword;
 		fetchAllFavouriteItems();
 	}
 
@@ -25,12 +37,13 @@ public class FavouriteItems {
 		Item item = getItem(itemId);
 		for (User temp : accounts) {
 			if (temp.getId().equals(userId)) {
-				Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root",
-						"ivan1313");
-				Statement myStmt = myCon.createStatement();
-				String sql = "INSERT INTO favourite_items(user_id,item_id) " + "VALUES (\"" + userId + "\",\""
-						+ item.getId() + "\");";
-				myStmt.executeUpdate(sql);
+				Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser,databasePassword);
+				PreparedStatement preparedStatement = myCon.prepareStatement(deleteFavouriteItems);
+				preparedStatement.setString(1,userId);
+				preparedStatement.setString(2,itemId);
+				preparedStatement.executeUpdate();
+				
+				
 				temp.favouriteItems.add(item);
 			}
 		}
@@ -54,12 +67,11 @@ public class FavouriteItems {
 				while (itr.hasNext()) {
 					currItem = itr.next();
 					if (currItem.getId().equals(itemId)) {
-						Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root",
-								"ivan1313");
-						Statement myStmt = myCon.createStatement();
-						String sql = "DELETE FROM favourite_items WHERE user_id ='" + userId + "'AND item_id='" + itemId
-								+ "';";
-						myStmt.executeUpdate(sql);
+						Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser,databasePassword);		
+						PreparedStatement preparedStatement = myCon.prepareStatement(deleteFavouriteItems);
+						preparedStatement.setString(1,userId);
+						preparedStatement.setString(2,itemId);
+						preparedStatement.executeUpdate();
 
 						itr.remove();
 					}
@@ -78,9 +90,9 @@ public class FavouriteItems {
 	}
 
 	private void fetchAllFavouriteItems() throws SQLException {
-		Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "ivan1313");
+		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser,databasePassword);
 		Statement myStmt = myCon.createStatement();
-		ResultSet myRs = myStmt.executeQuery("select * from favourite_items");
+		ResultSet myRs = myStmt.executeQuery(allFavouriteItems);
 
 		Item item;
 		String itemId;
