@@ -9,15 +9,28 @@ public class Item {
 	private String name;
 	private double price;
 	private String description;
+	private String category;
 	private boolean status;
 
-	public Item(String userId, String name, double price, String description) {
+	public Item(String userId, String name, double price, String description, String category) {
 		this.id = UUID.randomUUID().toString();
 		this.userId = userId;
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		this.category = category;
 		this.status = true;
+	}
+
+	public Item(String id, String name, String description, double price, boolean status, String userId,
+			String category) {
+		this.id = id;
+		this.userId = userId;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.status = status;
+		this.category=category;
 	}
 
 	public boolean isActive() {
@@ -28,23 +41,16 @@ public class Item {
 		this.status = status;
 	}
 
-	public Item(String id, String name, String description, double price, boolean status, String userId) {
-		this.id = id;
-		this.userId = userId;
-		this.name = name;
-		this.price = price;
-		this.description = description;
-		this.status = status;
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	@Override
-	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", active="
-				+ status + "]";
 	}
 
 	public String getId() {
@@ -77,6 +83,12 @@ public class Item {
 
 	public String getUserId() {
 		return userId;
+	}
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", category="
+				+ category + ", active=" + status + "]";
 	}
 
 }

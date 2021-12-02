@@ -67,6 +67,7 @@ public class AccountController {
 		return null;
 	}
 	
+	
 	public void fetchAllUsers() throws SQLException, NotEmailAddressException {
 		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser,databasePassword);
 		Statement myStmt = myCon.createStatement();

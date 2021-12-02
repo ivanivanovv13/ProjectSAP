@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import Controller.AccountController;
+import Controller.AdministratorController;
 import Controller.FavouriteItems;
 import Controller.ItemsController;
 import Model.Item;
@@ -13,25 +14,31 @@ import Model.User;
 public class App {
 
 	public static void main(String[] args) throws NotEmailAddressException, SQLException {
-		
-		AccountController accounts = new AccountController(args[0],args[1],args[2]);
-		ItemsController items = new ItemsController(args[0],args[1],args[2]);
-		FavouriteItems faveItems = new FavouriteItems(accounts.accounts, items.items,args[0],args[1],args[2]);
 
-		String userId, email;
+		AccountController accounts = new AccountController(args[0], args[1], args[2]);
+		ItemsController items = new ItemsController(args[0], args[1], args[2]);
+		FavouriteItems faveItems = new FavouriteItems(accounts.accounts, items.items, args[0], args[1], args[2]);
+		AdministratorController administrators = new AdministratorController(args[0], args[1], args[2], items.items,
+				items.category);
+
+		String userId;
+		String email;
 		String firstName;
 		String lastName;
 		String password;
 		String phoneNum;
 		String name;
 		String description;
+		String data;
+		String category;
 		boolean status;
 		double price = 0.0;
 		String itemId;
 		Scanner in = new Scanner(System.in);
 
 		System.out.println("Press 1 for register.");
-		System.out.println("Press 2 for Log in.");
+		System.out.println("Press 2 for Log in as user.");
+		System.out.println("Press 3 for Log in as administrator.");
 		System.out.println("Press 0 for Stopping the program.");
 
 		while (true) {
@@ -74,7 +81,7 @@ public class App {
 							switch (in.nextInt()) {
 							case 1:
 								System.out.println("Insert item's id:");
-								String data = accounts.getUserPhoneNumber(items.getUser(in.next()));
+								data = accounts.getUserPhoneNumber(items.getUser(in.next()));
 								if (data != null) {
 									System.out.println("Call seller :" + data);
 								}
@@ -101,9 +108,18 @@ public class App {
 								price = in.nextDouble();
 								System.out.println("Insert descrption:");
 								description = in.next();
+								items.category.forEach(cat -> {
+									System.out.println(cat.getName());
+								});
+								System.out.println("Insert category:");
+								category = in.next();
+								while (!items.getCategory(category)) {
+									System.out.println("Insert valid category.");
+									category = in.next();
+								}
 								System.out.println("Insert status:");
 								status = in.nextBoolean();
-								items.updateItem(userId, itemId, name, price, description, status);
+								items.updateItem(userId, itemId, name, price, description, category, status);
 
 								break;
 							case 2:
@@ -125,7 +141,16 @@ public class App {
 							price = in.nextDouble();
 							System.out.println("Insert descption:");
 							description = in.next();
-							Item item = new Item(userId, name, price, description);
+							items.category.forEach(cat -> {
+								System.out.println(cat.getName());
+							});
+							System.out.println("Insert category:");
+							category = in.next();
+							while (!items.getCategory(category)) {
+								System.out.println("Insert valid category.");
+								category = in.next();
+							}
+							Item item = new Item(userId, name, price, description, category);
 							items.addItem(item);
 							break;
 
@@ -143,7 +168,6 @@ public class App {
 						case 0:
 							System.exit(0);
 							break;
-
 						}
 					}
 
@@ -152,12 +176,60 @@ public class App {
 				}
 				break;
 			}
+			case 3:
+				System.out.println("Insert email:");
+				email = in.next();
+				System.out.println("Insert Password:");
+				password = in.next();
 
+				if (administrators.logIn(email, password)) {
+					System.out.println("Logged in successfully");
+					while (true) {
+						System.out.println("Press 1 for all items.");
+						System.out.println("Press 2 for all deactivated items.");
+						System.out.println("Press 3 for categories.");
+						System.out.println("Press 0 for Stopping the program.");
+
+						switch (in.nextInt()) {
+						case 1:
+							administrators.getActiveItems();
+							break;
+						case 2:
+							administrators.getInactiveItems();
+							break;
+						case 3:
+							administrators.getCategories();
+							System.out.println("Press 1 to add category.");
+							System.out.println("Press 2 to update category.");
+							System.out.println("Press 3 to delete category.");
+							System.out.println("Press 0 for going back.");
+
+							switch (in.nextInt()) {
+							case 1:
+								System.out.println("Insert name of category:");
+								administrators.addCategory(in.next());
+								break;
+							case 2:
+								System.out.println(
+										"Insert the name of the category you want to change and the new name:");
+								administrators.updateCategory(in.next(), in.next());
+								break;
+							case 3:
+								System.out.println("Insert name of category you want to delete:");
+								administrators.deleteCategory(in.next());
+								break;
+							}
+							break;
+						}
+					}
+				} else {
+					System.out.println("Invalid email or password");
+				}
+
+				break;
 			case 0:
-
 				System.exit(0);
 			}
-
 		}
 	}
 }
