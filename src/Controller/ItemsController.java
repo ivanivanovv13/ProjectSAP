@@ -1,6 +1,7 @@
 package Controller;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +13,10 @@ import Model.Item;
 public class ItemsController {
 	public List<Item> items = new ArrayList<Item>();
 	public List<Category> category = new ArrayList<Category>();
-	final String allItems = "select * from items";
-	final String insertItem = "INSERT INTO items(id,name,price,description,category,status,user_id) VALUES(?,?,?,?,?,?,?); ";
+	final String allItems = "select * from items order by date desc;";
+	final String insertItem = "INSERT INTO items(id,name,price,description,category,date,status,user_id) VALUES(?,?,?,?,?,?,?,?); ";
 	final String deleteItem = "DELETE FROM items WHERE id =?";
-	final String updateItems = "UPDATE items set name=? ,description=?,price=?,status=?,category=?,user_id=? where id=? ;";
+	final String updateItems = "UPDATE items set name=? ,description=?,price=?,status=?,category=?,date=?,user_id=? where id=? ;";
 	String databaseUrl;
 	String databaseUser;
 	String databasePassword;
@@ -30,6 +31,15 @@ public class ItemsController {
 	public void getItems() {
 		for (Item item : items) {
 			if (item.isActive()) {
+				System.out.println(item.toString());
+			}
+		}
+	}
+
+	public void getItemsByDate(LocalDate from, LocalDate to) {
+		for (Item item : items) {
+			if (item.isActive() && (item.getDate().toLocalDate().isBefore(to))
+					&& (item.getDate().toLocalDate().isAfter(from))) {
 				System.out.println(item.toString());
 			}
 		}
@@ -73,11 +83,13 @@ public class ItemsController {
 					preparedStatement.setDouble(3, price);
 					preparedStatement.setBoolean(4, status);
 					preparedStatement.setString(5, category);
-					preparedStatement.setString(6, userId);
-					preparedStatement.setString(7, itemId);
+					preparedStatement.setDate(6, Date.valueOf(LocalDate.now()));
+					preparedStatement.setString(7, userId);
+					preparedStatement.setString(8, itemId);
 					preparedStatement.executeUpdate();
 
-					Item newItem = new Item(itemId, name, description, price, status, userId, category);
+					Item newItem = new Item(itemId, name, description, price, status, userId, category,
+							Date.valueOf(LocalDate.now()));
 					items.set(items.indexOf(item), newItem);
 					System.out.println("Item updated successfully");
 				}
@@ -95,8 +107,9 @@ public class ItemsController {
 			preparedStatement.setDouble(3, item.getPrice());
 			preparedStatement.setString(4, item.getDescription());
 			preparedStatement.setString(5, item.getCategory());
-			preparedStatement.setBoolean(6, item.isActive());
-			preparedStatement.setString(7, item.getUserId());
+			preparedStatement.setDate(6, Date.valueOf(LocalDate.now()));
+			preparedStatement.setBoolean(7, item.isActive());
+			preparedStatement.setString(8, item.getUserId());
 			preparedStatement.executeUpdate();
 
 			items.add(item);
@@ -130,8 +143,7 @@ public class ItemsController {
 		while (myRs.next()) {
 			items.add(new Item(myRs.getString("id"), myRs.getString("name"), myRs.getString("description"),
 					myRs.getDouble("price"), myRs.getBoolean("status"), myRs.getString("user_id"),
-					myRs.getString("category")));
+					myRs.getString("category"), myRs.getDate("date")));
 		}
 	}
-
 }

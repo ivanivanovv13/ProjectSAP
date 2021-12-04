@@ -1,5 +1,7 @@
 package Model;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class Item {
@@ -9,6 +11,7 @@ public class Item {
 	private String name;
 	private double price;
 	private String description;
+	private Date date;
 	private String category;
 	private boolean status;
 
@@ -19,18 +22,28 @@ public class Item {
 		this.price = price;
 		this.description = description;
 		this.category = category;
+		this.date = Date.valueOf(LocalDate.now());
 		this.status = true;
 	}
 
 	public Item(String id, String name, String description, double price, boolean status, String userId,
-			String category) {
+			String category, Date date) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.status = status;
-		this.category=category;
+		this.category = category;
+		this.date = date;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public boolean isActive() {
@@ -88,7 +101,7 @@ public class Item {
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", category="
-				+ category + ", active=" + status + "]";
+				+ category + ", active=" + status + ", date=" + date + "]";
 	}
 
 }

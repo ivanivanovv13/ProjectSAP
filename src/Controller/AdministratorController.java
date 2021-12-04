@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +66,24 @@ public class AdministratorController {
 	public void getInactiveItems() {
 		for (Item item : items) {
 			if (!item.isActive()) {
+				System.out.println(item.toString());
+			}
+		}
+	}
+	
+	public void getItemsByDate(LocalDate from, LocalDate to) {
+		for (Item item : items) {
+			if (item.isActive() && (item.getDate().toLocalDate().isBefore(to))
+					&& (item.getDate().toLocalDate().isAfter(from))) {
+				System.out.println(item.toString());
+			}
+		}
+	}
+	
+	public void getInactiveItemsByDate(LocalDate from, LocalDate to) {
+		for (Item item : items) {
+			if (!item.isActive() && (item.getDate().toLocalDate().isBefore(to))
+					&& (item.getDate().toLocalDate().isAfter(from))) {
 				System.out.println(item.toString());
 			}
 		}

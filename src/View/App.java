@@ -1,6 +1,7 @@
 package View;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import Controller.AccountController;
@@ -34,6 +35,8 @@ public class App {
 		boolean status;
 		double price = 0.0;
 		String itemId;
+		LocalDate dateFrom;
+		LocalDate dateTo;
 		Scanner in = new Scanner(System.in);
 
 		System.out.println("Press 1 for register.");
@@ -77,6 +80,7 @@ public class App {
 							items.getItems();
 							System.out.println("Press 1 buying item.");
 							System.out.println("Press 2 to add item as favourite.");
+							System.out.println("Press 3 to search by date.");
 							System.out.println("Press 0 for going back.");
 							switch (in.nextInt()) {
 							case 1:
@@ -90,6 +94,14 @@ public class App {
 								System.out.println("Insert item's id:");
 								faveItems.addFavouriteItems(userId, in.next());
 								System.out.println("Item added to favourites.");
+								break;
+							case 3:
+								System.out.println("Insert date from (YYYY-MM-DD):");
+								dateFrom = LocalDate.parse(in.next());
+								System.out.println("Insert date to (YYYY-MM-DD):");
+								dateTo = LocalDate.parse(in.next());
+								items.getItemsByDate(dateFrom, dateTo);
+								break;
 							}
 							break;
 						}
@@ -193,9 +205,31 @@ public class App {
 						switch (in.nextInt()) {
 						case 1:
 							administrators.getActiveItems();
+							System.out.println("Press 1 to search by date:");
+							System.out.println("Press 0 for going back:");
+							switch (in.nextInt()) {
+							case 1:
+								System.out.println("Insert date from (YYYY-MM-DD):");
+								dateFrom = LocalDate.parse(in.next());
+								System.out.println("Insert date to (YYYY-MM-DD):");
+								dateTo = LocalDate.parse(in.next());
+								items.getItemsByDate(dateFrom, dateTo);
+								break;
+							}
 							break;
 						case 2:
 							administrators.getInactiveItems();
+							System.out.println("Press 1 to search by date:");
+							System.out.println("Press 0 for going back:");
+							switch (in.nextInt()) {
+							case 1:
+								System.out.println("Insert date from (YYYY-MM-DD):");
+								dateFrom = LocalDate.parse(in.next());
+								System.out.println("Insert date to (YYYY-MM-DD):");
+								dateTo = LocalDate.parse(in.next());
+								administrators.getInactiveItemsByDate(dateFrom, dateTo);
+								break;
+							}
 							break;
 						case 3:
 							administrators.getCategories();
@@ -220,6 +254,8 @@ public class App {
 								break;
 							}
 							break;
+						case 0:
+							System.exit(0);
 						}
 					}
 				} else {
