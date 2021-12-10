@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import Model.Category;
 import Model.Item;
@@ -13,13 +12,13 @@ import Model.Item;
 public class ItemsController {
 	public List<Item> items = new ArrayList<Item>();
 	public List<Category> category = new ArrayList<Category>();
-	final String allItems = "select * from items order by date desc;";
-	final String insertItem = "INSERT INTO items(id,name,price,description,category,date,status,user_id) VALUES(?,?,?,?,?,?,?,?); ";
-	final String deleteItem = "DELETE FROM items WHERE id =?";
-	final String updateItems = "UPDATE items set name=? ,description=?,price=?,status=?,category=?,date=?,user_id=? where id=? ;";
-	String databaseUrl;
-	String databaseUser;
-	String databasePassword;
+	private static final String allItems = "select * from items order by date desc;";
+	private static final String insertItem = "INSERT INTO items(id,name,price,description,category,date,status,user_id) VALUES(?,?,?,?,?,?,?,?); ";
+	private static final String deleteItem = "DELETE FROM items WHERE id =?";
+	private static final String updateItems = "UPDATE items set name=? ,description=?,price=?,status=?,category=?,date=?,user_id=? where id=? ;";
+	private String databaseUrl;
+	private String databaseUser;
+	private String databasePassword;
 
 	public ItemsController(String databaseUrl, String databaseUser, String databasePassword) throws SQLException {
 		this.databaseUrl = databaseUrl;
@@ -28,29 +27,35 @@ public class ItemsController {
 		fetchAllItems();
 	}
 
-	public void getItems() {
+	public List<Item> getItems() {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (item.isActive()) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
 
-	public void getItemsByDate(LocalDate from, LocalDate to) {
+	public List<Item> getItemsByDate(LocalDate from, LocalDate to) {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (item.isActive() && (item.getDate().toLocalDate().isBefore(to))
 					&& (item.getDate().toLocalDate().isAfter(from))) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
 
-	public void getUsersItems(String userId) {
+	public List<Item> getUsersItems(String userId) {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (item.getUserId().equals(userId)) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
 
 	public void deleteItem(String userId, String itemId) throws SQLException {
@@ -71,8 +76,8 @@ public class ItemsController {
 		}
 	}
 
-	public void updateItem(String userId, String itemId, String name, double price, String description, String category,
-			boolean status) throws SQLException {
+	public boolean updateItem(String userId, String itemId, String name, double price, String description,
+			String category, boolean status) throws SQLException {
 		for (Item item : items) {
 			if (item.getUserId().equals(userId)) {
 				if (item.getId().equals(itemId)) {
@@ -91,13 +96,16 @@ public class ItemsController {
 					Item newItem = new Item(itemId, name, description, price, status, userId, category,
 							Date.valueOf(LocalDate.now()));
 					items.set(items.indexOf(item), newItem);
-					System.out.println("Item updated successfully");
+					return true;
+
 				}
 			}
 		}
+
+		throw new IllegalArgumentException();
 	}
 
-	public void addItem(Item item) throws SQLException {
+	public boolean addItem(Item item) throws SQLException {
 
 		if (item != null) {
 			Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
@@ -113,9 +121,10 @@ public class ItemsController {
 			preparedStatement.executeUpdate();
 
 			items.add(item);
-			System.out.println("Succsesfullfy add a item.");
+			return true;
+		} else {
+			throw new IllegalArgumentException();
 		}
-
 	}
 
 	public String getUser(String itemId) {

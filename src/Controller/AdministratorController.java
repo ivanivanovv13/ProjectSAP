@@ -16,18 +16,17 @@ import Model.Administrator;
 import Model.Category;
 import Model.Item;
 import Model.NotEmailAddressException;
-import Model.User;
 
 public class AdministratorController {
 
-	String databaseUrl;
-	String databaseUser;
-	String databasePassword;
-	final String allAdministratos = "SELECT * FROM administrators";
-	final String allCategories = "SELECT * FROM category";
-	final String addCategory = "Insert into category(id,name) Values(?,?)";
-	final String updateItems = "UPDATE category set id=? ,name=? where id=? ;";
-	final String deleteCategory="DELETE FROM category WHERE name =?";
+	private String databaseUrl;
+	private String databaseUser;
+	private String databasePassword;
+	private static final String allAdministratos = "SELECT * FROM administrators";
+	private static final String allCategories = "SELECT * FROM category";
+	private static final String addCategory = "Insert into category(id,name) Values(?,?)";
+	private static final String updateItems = "UPDATE category set id=? ,name=? where id=? ;";
+	private static final String deleteCategory = "DELETE FROM category WHERE name =?";
 
 	private List<Administrator> accounts = new ArrayList<Administrator>();
 	private List<Item> items;
@@ -55,44 +54,50 @@ public class AdministratorController {
 		return false;
 	}
 
-	public void getActiveItems() {
+	public List<Item> getActiveItems() {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (item.isActive()) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
 
-	public void getInactiveItems() {
+	public List<Item> getInactiveItems() {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (!item.isActive()) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
-	
-	public void getItemsByDate(LocalDate from, LocalDate to) {
+
+	public List<Item> getItemsByDate(LocalDate from, LocalDate to) {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (item.isActive() && (item.getDate().toLocalDate().isBefore(to))
 					&& (item.getDate().toLocalDate().isAfter(from))) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
-	
-	public void getInactiveItemsByDate(LocalDate from, LocalDate to) {
+
+	public List<Item> getInactiveItemsByDate(LocalDate from, LocalDate to) {
+		List<Item> list = new ArrayList<Item>();
 		for (Item item : items) {
 			if (!item.isActive() && (item.getDate().toLocalDate().isBefore(to))
 					&& (item.getDate().toLocalDate().isAfter(from))) {
-				System.out.println(item.toString());
+				list.add(item);
 			}
 		}
+		return list;
 	}
 
-	public void getCategories() {
-		for (Category category : categories) {
-			System.out.println(category.getName());
-		}
+	public List<Category> getCategories() {
+		return categories;
 	}
 
 	public void addCategory(String category) throws SQLException {
@@ -105,7 +110,7 @@ public class AdministratorController {
 		preparedStatement.executeUpdate();
 	}
 
-	public void updateCategory(String category, String newCategory) throws SQLException {
+	public boolean updateCategory(String category, String newCategory) throws SQLException {
 		for (Category temp : categories) {
 			if (temp.getName().equals(category)) {
 				Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
@@ -118,9 +123,11 @@ public class AdministratorController {
 
 				Category newSection = new Category(temp.getId(), newCategory);
 				categories.set(categories.indexOf(temp), newSection);
-				System.out.println("Category updated successfully");
+				return true;
+
 			}
 		}
+		throw new IllegalArgumentException();
 	}
 
 	public void deleteCategory(String category) throws SQLException {
@@ -150,7 +157,7 @@ public class AdministratorController {
 					myRs.getString("first_name"), myRs.getString("last_name"), myRs.getString("phone_number")));
 		}
 	}
-	
+
 	public void fetchAllCategories() throws SQLException, NotEmailAddressException {
 		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 		Statement myStmt = myCon.createStatement();
