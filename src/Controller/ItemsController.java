@@ -1,30 +1,44 @@
 package Controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+
 import Model.Category;
 import Model.Item;
+import Model.NotEmailAddressException;
 
 public class ItemsController {
 	public List<Item> items = new ArrayList<Item>();
 	public List<Category> category = new ArrayList<Category>();
 	private static final String allItems = "select * from items order by date desc;";
-	private static final String insertItem = "INSERT INTO items(id,name,price,description,category,date,status,user_id) VALUES(?,?,?,?,?,?,?,?); ";
+	private static final String allCategories = "SELECT * FROM category";
+	private static final String insertItem = "INSERT INTO items(id,name,price,description,category,date,status,user_id,image) VALUES(?,?,?,?,?,?,?,?,?); ";
 	private static final String deleteItem = "DELETE FROM items WHERE id =?";
-	private static final String updateItems = "UPDATE items set name=? ,description=?,price=?,status=?,category=?,date=?,user_id=? where id=? ;";
+	private static final String updateItems = "UPDATE items set name=? ,description=?,price=?,status=?,category=?,date=?,user_id=?,image=? where id=? ;";
 	private String databaseUrl;
 	private String databaseUser;
 	private String databasePassword;
 
-	public ItemsController(String databaseUrl, String databaseUser, String databasePassword) throws SQLException {
+	public ItemsController(String databaseUrl, String databaseUser, String databasePassword)
+			throws SQLException, NotEmailAddressException {
 		this.databaseUrl = databaseUrl;
 		this.databaseUser = databaseUser;
 		this.databasePassword = databasePassword;
 		fetchAllItems();
+		fetchAllCategories();
 	}
 
 	public List<Item> getItems() {
@@ -66,8 +80,7 @@ public class ItemsController {
 				if (currItem.getId().equals(itemId)) {
 					Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 					PreparedStatement preparedStatement = myCon.prepareStatement(deleteItem);
-					preparedStatement.setString(1, userId);
-					preparedStatement.setString(2, itemId);
+					preparedStatement.setString(1, itemId);
 					preparedStatement.executeUpdate();
 
 					itr.remove();
@@ -77,24 +90,26 @@ public class ItemsController {
 	}
 
 	public boolean updateItem(String userId, String itemId, String name, double price, String description,
-			String category, boolean status) throws SQLException {
+			String category, boolean status, Blob image) throws SQLException {
 		for (Item item : items) {
 			if (item.getUserId().equals(userId)) {
 				if (item.getId().equals(itemId)) {
+
 					Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 					PreparedStatement preparedStatement = myCon.prepareStatement(updateItems);
 					preparedStatement.setString(1, name);
 					preparedStatement.setString(2, description);
 					preparedStatement.setDouble(3, price);
-					preparedStatement.setBoolean(4, status);
+					preparedStatement.setString(4, String.valueOf(status));
 					preparedStatement.setString(5, category);
 					preparedStatement.setDate(6, Date.valueOf(LocalDate.now()));
 					preparedStatement.setString(7, userId);
 					preparedStatement.setString(8, itemId);
+					preparedStatement.setBlob(9,image);
 					preparedStatement.executeUpdate();
 
 					Item newItem = new Item(itemId, name, description, price, status, userId, category,
-							Date.valueOf(LocalDate.now()));
+							Date.valueOf(LocalDate.now()), null);
 					items.set(items.indexOf(item), newItem);
 					return true;
 
@@ -105,7 +120,7 @@ public class ItemsController {
 		throw new IllegalArgumentException();
 	}
 
-	public boolean addItem(Item item) throws SQLException {
+	public boolean addItem(Item item) throws SQLException, IOException {
 
 		if (item != null) {
 			Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
@@ -118,6 +133,7 @@ public class ItemsController {
 			preparedStatement.setDate(6, Date.valueOf(LocalDate.now()));
 			preparedStatement.setBoolean(7, item.isActive());
 			preparedStatement.setString(8, item.getUserId());
+			preparedStatement.setBlob(9, item.getImage());
 			preparedStatement.executeUpdate();
 
 			items.add(item);
@@ -152,7 +168,17 @@ public class ItemsController {
 		while (myRs.next()) {
 			items.add(new Item(myRs.getString("id"), myRs.getString("name"), myRs.getString("description"),
 					myRs.getDouble("price"), myRs.getBoolean("status"), myRs.getString("user_id"),
-					myRs.getString("category"), myRs.getDate("date")));
+					myRs.getString("category"), myRs.getDate("date"),myRs.getBlob("image")));
+		}
+	}
+
+	public void fetchAllCategories() throws SQLException, NotEmailAddressException {
+		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
+		Statement myStmt = myCon.createStatement();
+		ResultSet myRs = myStmt.executeQuery(allCategories);
+
+		while (myRs.next()) {
+			category.add(new Category(myRs.getString("id"), myRs.getString("name")));
 		}
 	}
 }

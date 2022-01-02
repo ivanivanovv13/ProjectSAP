@@ -23,7 +23,6 @@ public class AdministratorController {
 	private String databaseUser;
 	private String databasePassword;
 	private static final String allAdministratos = "SELECT * FROM administrators";
-	private static final String allCategories = "SELECT * FROM category";
 	private static final String addCategory = "Insert into category(id,name) Values(?,?)";
 	private static final String updateItems = "UPDATE category set id=? ,name=? where id=? ;";
 	private static final String deleteCategory = "DELETE FROM category WHERE name =?";
@@ -40,7 +39,6 @@ public class AdministratorController {
 		this.items = items;
 		this.categories = categories;
 		fetchAllAdministrators();
-		fetchAllCategories();
 	}
 
 	public boolean logIn(String email, String password) {
@@ -158,14 +156,6 @@ public class AdministratorController {
 		}
 	}
 
-	public void fetchAllCategories() throws SQLException, NotEmailAddressException {
-		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
-		Statement myStmt = myCon.createStatement();
-		ResultSet myRs = myStmt.executeQuery(allCategories);
-
-		while (myRs.next()) {
-			categories.add(new Category(myRs.getString("id"), myRs.getString("name")));
-		}
-	}
+	
 
 }

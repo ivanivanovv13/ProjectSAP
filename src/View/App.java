@@ -1,5 +1,6 @@
 package View;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ import Model.User;
 
 public class App {
 
-	public static void main(String[] args) throws NotEmailAddressException, SQLException {
+	public static void main(String[] args) throws NotEmailAddressException, SQLException, IOException {
 		if (args.length != 3) {
 			System.out.println("invalid arguments. Usage ./program-name argument-1 argument2 argument-3");
 			System.exit(1);
@@ -142,7 +143,7 @@ public class App {
 								}
 								System.out.println("Insert status:");
 								status = in.nextBoolean();
-								if (items.updateItem(userId, itemId, name, price, description, category, status)) {
+								if (items.updateItem(userId, itemId, name, price, description, category, status,null)) {
 									System.out.println("Item updated successfully");
 								}
 								break;
@@ -173,7 +174,7 @@ public class App {
 								System.out.println("Insert valid category.");
 								category = in.next();
 							}
-							Item item = new Item(userId, name, price, description, category);
+							Item item = new Item(userId, name, price, description, category,null);
 							if (items.addItem(item)) {
 								System.out.println("Succsesfullfy add a item.");
 							}

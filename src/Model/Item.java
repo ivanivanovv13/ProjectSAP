@@ -1,5 +1,7 @@
 package Model;
 
+import java.io.File;
+import java.sql.Blob;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -14,8 +16,17 @@ public class Item {
 	private Date date;
 	private String category;
 	private boolean status;
+	private Blob image;
 
-	public Item(String userId, String name, double price, String description, String category) {
+	public Blob getImage() {
+		return image;
+	}
+
+	public void setImage(Blob image) {
+		this.image = image;
+	}
+
+	public Item(String userId, String name, double price, String description, String category,Blob image) {
 		this.id = UUID.randomUUID().toString();
 		this.userId = userId;
 		this.name = name;
@@ -24,10 +35,11 @@ public class Item {
 		this.category = category;
 		this.date = Date.valueOf(LocalDate.now());
 		this.status = true;
+		this.image=image;
 	}
 
 	public Item(String id, String name, String description, double price, boolean status, String userId,
-			String category, Date date) {
+			String category, Date date,Blob image) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
@@ -36,6 +48,7 @@ public class Item {
 		this.status = status;
 		this.category = category;
 		this.date = date;
+		this.image=image;
 	}
 
 	public Date getDate() {

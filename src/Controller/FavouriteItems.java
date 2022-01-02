@@ -91,7 +91,7 @@ public class FavouriteItems {
 		return null;
 	}
 
-	private void fetchAllFavouriteItems() throws SQLException {
+	public void fetchAllFavouriteItems() throws SQLException {
 		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 		Statement myStmt = myCon.createStatement();
 		ResultSet myRs = myStmt.executeQuery(allFavouriteItems);
