@@ -21,8 +21,8 @@ import Model.Item;
 import Model.NotEmailAddressException;
 
 public class ItemsController {
-	public List<Item> items = new ArrayList<Item>();
-	public List<Category> category = new ArrayList<Category>();
+	private List<Item> items = new ArrayList<Item>();
+	private List<Category> category = new ArrayList<Category>();
 	private static final String allItems = "select * from items order by date desc;";
 	private static final String allCategories = "SELECT * FROM category";
 	private static final String insertItem = "INSERT INTO items(id,name,price,description,category,date,status,user_id,image) VALUES(?,?,?,?,?,?,?,?,?); ";
@@ -39,6 +39,13 @@ public class ItemsController {
 		this.databasePassword = databasePassword;
 		fetchAllItems();
 		fetchAllCategories();
+	}
+	
+	public List<Item> getListItems(){
+		return this.items;
+	}
+	public List<Category> getListCategory(){
+		return this.category;
 	}
 
 	public List<Item> getItems() {

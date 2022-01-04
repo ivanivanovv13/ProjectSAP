@@ -18,14 +18,6 @@ public class Item {
 	private boolean status;
 	private Blob image;
 
-	public Blob getImage() {
-		return image;
-	}
-
-	public void setImage(Blob image) {
-		this.image = image;
-	}
-
 	public Item(String userId, String name, double price, String description, String category,Blob image) {
 		this.id = UUID.randomUUID().toString();
 		this.userId = userId;
@@ -109,6 +101,14 @@ public class Item {
 
 	public String getUserId() {
 		return userId;
+	}
+	
+	public Blob getImage() {
+		return image;
+	}
+
+	public void setImage(Blob image) {
+		this.image = image;
 	}
 
 	@Override

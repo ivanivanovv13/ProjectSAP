@@ -9,7 +9,7 @@ import Model.User;
 
 public class AccountController {
 
-	public List<User> accounts = new ArrayList<User>();
+	private List<User> accounts = new ArrayList<User>();
 	private static final String allUsers = "select * from users";
 	private static final String insertUsers = "INSERT INTO users(id,email,password,first_name,last_name,phone_number) VALUES (?,?,?,?,?,?); ";
 	private String databaseUrl;
@@ -22,6 +22,9 @@ public class AccountController {
 		this.databaseUser = databaseUser;
 		this.databasePassword = databasePassword;
 		fetchAllUsers();
+	}
+	public List<User> getAccounts(){
+		return this.accounts;
 	}
 
 	public boolean addAccount(User obj) throws SQLException, NullPointerException {

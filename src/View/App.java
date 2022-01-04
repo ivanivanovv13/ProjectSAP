@@ -25,10 +25,10 @@ public class App {
 		String databasePassword = args[2];
 		AccountController accounts = new AccountController(databaseUrl, databaseUser, databasePassword);
 		ItemsController items = new ItemsController(databaseUrl, databaseUser, databasePassword);
-		FavouriteItems faveItems = new FavouriteItems(accounts.accounts, items.items, databaseUrl, databaseUser,
+		FavouriteItems faveItems = new FavouriteItems(accounts.getAccounts(), items.getListItems(), databaseUrl, databaseUser,
 				databasePassword);
 		AdministratorController administrators = new AdministratorController(databaseUrl, databaseUser,
-				databasePassword, items.items, items.category);
+				databasePassword, items.getListItems(), items.getListCategory());
 
 		String userId;
 		String email;
@@ -132,7 +132,7 @@ public class App {
 								price = in.nextDouble();
 								System.out.println("Insert descrption:");
 								description = in.next();
-								items.category.forEach(cat -> {
+								items.getListCategory().forEach(cat -> {
 									System.out.println(cat.getName());
 								});
 								System.out.println("Insert category:");
@@ -165,7 +165,7 @@ public class App {
 							price = in.nextDouble();
 							System.out.println("Insert descption:");
 							description = in.next();
-							items.category.forEach(cat -> {
+							items.getListCategory().forEach(cat -> {
 								System.out.println(cat.getName());
 							});
 							System.out.println("Insert category:");

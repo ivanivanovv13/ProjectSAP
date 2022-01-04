@@ -44,7 +44,7 @@ public class FavouriteItems {
 				preparedStatement.setString(2, itemId);
 				preparedStatement.executeUpdate();
 
-				temp.favouriteItems.add(item);
+				temp.getFavouriteItems().add(item);
 			}
 		}
 	}
@@ -53,7 +53,7 @@ public class FavouriteItems {
 		List<Item> list = new ArrayList<Item>();
 		for (User temp : accounts) {
 			if (temp.getId().equals(userId)) {
-				for (Item item : temp.favouriteItems) {
+				for (Item item : temp.getFavouriteItems()) {
 					list.add(item);
 				}
 			}
@@ -64,7 +64,7 @@ public class FavouriteItems {
 	public void removeFavouriteItems(String userId, String itemId) throws SQLException {
 		for (User temp : accounts) {
 			if (temp.getId().equals(userId)) {
-				Iterator<Item> itr = temp.favouriteItems.iterator();
+				Iterator<Item> itr = temp.getFavouriteItems().iterator();
 				Item currItem;
 				while (itr.hasNext()) {
 					currItem = itr.next();
@@ -106,7 +106,7 @@ public class FavouriteItems {
 
 			for (User temp : accounts) {
 				if (temp.getId().equals(userId)) {
-					temp.favouriteItems.add(item);
+					temp.getFavouriteItems().add(item);
 				}
 			}
 

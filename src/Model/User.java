@@ -12,7 +12,7 @@ public class User {
 	private String email;
 	private String phoneNum;
 	private String password;
-	public List<Item> favouriteItems = new ArrayList<Item>();
+	private List<Item> favouriteItems = new ArrayList<Item>();
 
 	public User(String firstName, String lastName, String email, String phoneNum, String password)
 			throws NotEmailAddressException {
@@ -50,6 +50,10 @@ public class User {
 		email = "";
 		phoneNum = "";
 		password = "";
+	}
+	
+	public List<Item> getFavouriteItems(){
+		return this.favouriteItems;
 	}
 
 	public String getPassword() {
