@@ -69,7 +69,7 @@ public class AddItemView extends JFrame {
 	public AddItemView(String databaseUrl, String databaseUser, String databasePassword, String userId)
 			throws SQLException, NotEmailAddressException {
 		items = new ItemsController(databaseUrl, databaseUser, databasePassword);
-		this.userId=userId;
+		this.userId = userId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 400, 762);
 		contentPane = new JPanel();
@@ -131,7 +131,7 @@ public class AddItemView extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 
-		 desc = new JTextArea();
+		desc = new JTextArea();
 		desc.setBounds(6, 15, 242, 192);
 		panel.add(desc);
 		desc.setBackground(UIManager.getColor("CheckBox.light"));
@@ -169,7 +169,12 @@ public class AddItemView extends JFrame {
 	private void onButtonClickAdd(ActionEvent e) {
 		Blob blob = null;
 		try {
-			blob = convertFileContentToBlob(file.getAbsolutePath());
+
+			if (file != null) {
+				blob = convertFileContentToBlob(file.getAbsolutePath());
+			} else {
+				blob = null;
+			}
 		} catch (SerialException e2) {
 			JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
 			e2.printStackTrace();
@@ -208,7 +213,7 @@ public class AddItemView extends JFrame {
 		ImageIcon img = new ImageIcon(newImage);
 		jlabel_Image.setIcon(img);
 	}
-	
+
 	private void onButtonClickedClose(ActionEvent e) {
 		contentPane.setVisible(false);
 		dispose();

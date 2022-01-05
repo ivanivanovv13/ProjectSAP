@@ -206,25 +206,34 @@ public class UpdateItemView extends JFrame {
 	}
 
 	private void onButtonClickedUpdate(ActionEvent e) {
+
+		Blob blob = null;
 		try {
-			Blob blob = null;
-			try {
+			if (file != null) {
 				blob = convertFileContentToBlob(file.getAbsolutePath());
-			} catch (SerialException e2) {
-				JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
-				e2.printStackTrace();
-			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
-				e2.printStackTrace();
-			} catch (SQLException e2) {
-				JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
-				e2.printStackTrace();
+			} else if (item.getImage() != null) {
+				blob = item.getImage();
+			} else {
+				blob = null;
 			}
+
+		} catch (SerialException e2) {
+			JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
+			e2.printStackTrace();
+		} catch (SQLException e2) {
+			JOptionPane.showMessageDialog(new JPanel(), e2.getMessage());
+			e2.printStackTrace();
+		}
+		try {
 			if (items.updateItem(userId, item.getId(), name.getText(), Double.parseDouble(price.getText()),
 					description.getText(), category.getSelectedItem(), rdbtnActive.isSelected(), blob)) {
 				contentPane.setVisible(false);
 				dispose();
 			}
+
 		} catch (SQLException e1) {
 			JOptionPane.showMessageDialog(new JPanel(), e1.getMessage());
 			e1.printStackTrace();

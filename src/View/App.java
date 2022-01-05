@@ -29,8 +29,11 @@ public class App {
 				databasePassword);
 		AdministratorController administrators = new AdministratorController(databaseUrl, databaseUser,
 				databasePassword, items.getListItems(), items.getListCategory());
+		
+		
 
 		String userId;
+		String administratorId;
 		String email;
 		String firstName;
 		String lastName;
@@ -210,7 +213,9 @@ public class App {
 				System.out.println("Insert Password:");
 				password = in.next();
 
-				if (administrators.logIn(email, password)) {
+				administratorId=administrators.logIn(email, password);
+				System.out.println(administratorId);
+				if (administratorId!=null) {
 					System.out.println("Logged in successfully");
 					while (true) {
 						System.out.println("Press 1 for all items.");
@@ -220,7 +225,7 @@ public class App {
 
 						switch (in.nextInt()) {
 						case 1:
-							administrators.getActiveItems();
+							administrators.getActiveItems().forEach(activeItems -> System.out.println(activeItems.toString()));
 							System.out.println("Press 1 to search by date:");
 							System.out.println("Press 0 for going back:");
 							switch (in.nextInt()) {
@@ -257,12 +262,12 @@ public class App {
 							switch (in.nextInt()) {
 							case 1:
 								System.out.println("Insert name of category:");
-								administrators.addCategory(in.next());
+								administrators.addCategory(in.next(),administratorId);
 								break;
 							case 2:
 								System.out.println(
 										"Insert the name of the category you want to change and the new name:");
-								if (administrators.updateCategory(in.next(), in.next())) {
+								if (administrators.updateCategory(in.next(), in.next(),administratorId)) {
 									System.out.println("Category updated successfully");
 								}
 								break;

@@ -23,8 +23,8 @@ public class AdministratorController {
 	private String databaseUser;
 	private String databasePassword;
 	private static final String allAdministratos = "SELECT * FROM administrators";
-	private static final String addCategory = "Insert into category(id,name) Values(?,?)";
-	private static final String updateItems = "UPDATE category set id=? ,name=? where id=? ;";
+	private static final String addCategory = "Insert into category(id,name,administrator_Id) Values(?,?,?)";
+	private static final String updateItems = "UPDATE category set id=? ,name=?,administrator_Id=? where id=? ;";
 	private static final String deleteCategory = "DELETE FROM category WHERE name =?";
 
 	private List<Administrator> accounts = new ArrayList<Administrator>();
@@ -41,15 +41,15 @@ public class AdministratorController {
 		fetchAllAdministrators();
 	}
 
-	public boolean logIn(String email, String password) {
+	public String logIn(String email, String password) {
 		for (Administrator temp : accounts) {
 			if (temp.getEmail().equals(email)) {
 				if (temp.getPassword().equals(password)) {
-					return true;
+					return temp.getId();
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public List<Item> getActiveItems() {
@@ -98,28 +98,30 @@ public class AdministratorController {
 		return categories;
 	}
 
-	public void addCategory(String category) throws SQLException {
+	public void addCategory(String category, String administratorId) throws SQLException {
 		String id = UUID.randomUUID().toString();
-		categories.add(new Category(id, category));
+		categories.add(new Category(id, category, administratorId));
 		Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 		PreparedStatement preparedStatement = myCon.prepareStatement(addCategory);
 		preparedStatement.setString(1, id);
 		preparedStatement.setString(2, category);
+		preparedStatement.setString(3, administratorId);
 		preparedStatement.executeUpdate();
 	}
 
-	public boolean updateCategory(String category, String newCategory) throws SQLException {
+	public boolean updateCategory(String category, String newCategory, String administratorId) throws SQLException {
 		for (Category temp : categories) {
 			if (temp.getName().equals(category)) {
 				Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 				PreparedStatement preparedStatement = myCon.prepareStatement(updateItems);
 				preparedStatement.setString(1, temp.getId());
 				preparedStatement.setString(2, newCategory);
-				preparedStatement.setString(3, temp.getId());
+				preparedStatement.setString(3, administratorId);
+				preparedStatement.setString(4, temp.getId());
 
 				preparedStatement.executeUpdate();
 
-				Category newSection = new Category(temp.getId(), newCategory);
+				Category newSection = new Category(temp.getId(), newCategory, administratorId);
 				categories.set(categories.indexOf(temp), newSection);
 				return true;
 
@@ -155,7 +157,5 @@ public class AdministratorController {
 					myRs.getString("first_name"), myRs.getString("last_name"), myRs.getString("phone_number")));
 		}
 	}
-
-	
 
 }

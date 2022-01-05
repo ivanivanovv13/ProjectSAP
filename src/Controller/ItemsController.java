@@ -1,20 +1,12 @@
 package Controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 
 import Model.Category;
 import Model.Item;
@@ -40,11 +32,12 @@ public class ItemsController {
 		fetchAllItems();
 		fetchAllCategories();
 	}
-	
-	public List<Item> getListItems(){
+
+	public List<Item> getListItems() {
 		return this.items;
 	}
-	public List<Category> getListCategory(){
+
+	public List<Category> getListCategory() {
 		return this.category;
 	}
 
@@ -101,7 +94,6 @@ public class ItemsController {
 		for (Item item : items) {
 			if (item.getUserId().equals(userId)) {
 				if (item.getId().equals(itemId)) {
-
 					Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 					PreparedStatement preparedStatement = myCon.prepareStatement(updateItems);
 					preparedStatement.setString(1, name);
@@ -111,12 +103,13 @@ public class ItemsController {
 					preparedStatement.setString(5, category);
 					preparedStatement.setDate(6, Date.valueOf(LocalDate.now()));
 					preparedStatement.setString(7, userId);
-					preparedStatement.setString(8, itemId);
-					preparedStatement.setBlob(9,image);
+					preparedStatement.setBlob(8, image);
+					preparedStatement.setString(9, itemId);
+					
 					preparedStatement.executeUpdate();
 
 					Item newItem = new Item(itemId, name, description, price, status, userId, category,
-							Date.valueOf(LocalDate.now()), null);
+							Date.valueOf(LocalDate.now()), image);
 					items.set(items.indexOf(item), newItem);
 					return true;
 
@@ -175,7 +168,7 @@ public class ItemsController {
 		while (myRs.next()) {
 			items.add(new Item(myRs.getString("id"), myRs.getString("name"), myRs.getString("description"),
 					myRs.getDouble("price"), myRs.getBoolean("status"), myRs.getString("user_id"),
-					myRs.getString("category"), myRs.getDate("date"),myRs.getBlob("image")));
+					myRs.getString("category"), myRs.getDate("date"), myRs.getBlob("image")));
 		}
 	}
 
@@ -185,7 +178,7 @@ public class ItemsController {
 		ResultSet myRs = myStmt.executeQuery(allCategories);
 
 		while (myRs.next()) {
-			category.add(new Category(myRs.getString("id"), myRs.getString("name")));
+			category.add(new Category(myRs.getString("id"), myRs.getString("name"),myRs.getString("administrator_Id")));
 		}
 	}
 }

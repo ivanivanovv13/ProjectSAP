@@ -195,7 +195,7 @@ public class ShowItemView extends JFrame {
 	private void onButtonClickedAddFavourites(ActionEvent e) {
 		if (button_AddFavourite.getLabel().equals("Remove item from Favourite")) {
 			try {
-				faveItems.removeFavouriteItems(item.getUserId(), item.getId());
+				faveItems.removeFavouriteItems(userId, item.getId());
 				button_AddFavourite.setEnabled(false);
 			} catch (SQLException e1) {
 				JOptionPane.showMessageDialog(new JPanel(), e1.getMessage());

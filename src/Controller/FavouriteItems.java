@@ -19,7 +19,7 @@ public class FavouriteItems {
 	private List<Item> items;
 	private static final String allFavouriteItems = "select * from favourite_items";
 	private static final String insertFavouriteItems = "INSERT INTO favourite_items(user_id,item_id) VALUES (?,?); ";
-	private static final String deleteFavouriteItems = "DELETE FROM favourite_items WHERE user_id =? AND item_id=?";
+	private static final String deleteFavouriteItems = "DELETE FROM favourite_items WHERE item_id=?";
 	private String databaseUrl;
 	private String databaseUser;
 	private String databasePassword;
@@ -71,8 +71,7 @@ public class FavouriteItems {
 					if (currItem.getId().equals(itemId)) {
 						Connection myCon = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 						PreparedStatement preparedStatement = myCon.prepareStatement(deleteFavouriteItems);
-						preparedStatement.setString(1, userId);
-						preparedStatement.setString(2, itemId);
+						preparedStatement.setString(1, itemId);
 						preparedStatement.executeUpdate();
 
 						itr.remove();
